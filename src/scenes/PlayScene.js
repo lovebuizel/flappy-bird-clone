@@ -17,6 +17,7 @@ class PlayScene extends BaseScene {
 
     this.score = 0;
     this.scoreText = '';
+    this.isGameOver = false;
 
     this.currentDifficulty = 'easy';
     this.difficulties = {
@@ -36,6 +37,7 @@ class PlayScene extends BaseScene {
   }
 
   create() {
+    this.isGameOver = false;
     this.currentDifficulty = 'easy';
     super.create();
     this.createBird();
@@ -48,7 +50,7 @@ class PlayScene extends BaseScene {
 
     this.anims.create({
       key: 'fly',
-      frames: this.anims.generateFrameNumbers('bird', { start: 9, end: 15}),
+      frames: this.anims.generateFrameNumbers('bird', { start: 8, end: 15}),
       // 24 fps default, it will play animation consisting of 24 frames in 1 second
       // in case of framerate 2 and sprite of 8 frames animations will play in
       // 4 sec; 8 / 2 = 4
@@ -70,7 +72,10 @@ class PlayScene extends BaseScene {
     if (this.pauseEvent) { return; }
 
     this.pauseEvent = this.events.on('resume', () => {
+      if (this.isGameOver) return
       this.initialTime = 3;
+      this.timedEvent && this.timedEvent.remove()
+      this.countDownText && this.countDownText.destroy()
       this.countDownText = this.add.text(...this.screenCenter, 'Fly in: ' + this.initialTime, this.fontOptions).setOrigin(0.5);
       this.timedEvent = this.time.addEvent({
         delay: 1000,
@@ -220,6 +225,7 @@ class PlayScene extends BaseScene {
   }
 
   gameOver() {
+    this.isGameOver = true
     this.physics.pause();
     this.bird.setTint(0xEE4824);
 
