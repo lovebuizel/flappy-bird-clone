@@ -69,8 +69,6 @@ class PlayScene extends BaseScene {
   }
 
   listenToEvents() {
-    if (this.pauseEvent) { return; }
-
     this.pauseEvent = this.events.on('resume', () => {
       if (this.isGameOver) return
       this.initialTime = 3;
